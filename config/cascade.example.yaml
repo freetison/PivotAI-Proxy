@@ -1,0 +1,96 @@
+# ============================================================================
+# AI Cascade Proxy — cascade configuration (example / TEMPLATE)
+# ============================================================================
+# This file is the single source of truth for the cascade: which model each
+# level uses, the per-level parameters, per-level JEV approval thresholds, and
+# the per-level token prices used by cost telemetry.
+#
+# 1. Copy it to `config/cascade.yaml`
+# 2. Replace every `TODO` with a real value (the proxy refuses to start otherwise)
+# 3. Set CASCADE_CONFIG_PATH if you keep it somewhere else
+#
+# Secrets NEVER belong here. Provider credentials are read from the environment:
+# OPENAI_API_KEY, ANTHROPIC_API_KEY.
+#
+# There is deliberately no hot reload: edit the file, then restart the service.
+# ============================================================================
+
+cascade:
+  # Hard cap on provider calls per request. Cannot be raised above 3.
+  max_hops: 3
+
+  # Exactly three levels, numbered 1, 2, 3 without gaps or reordering.
+  levels:
+    # ---- Level 1: cheapest model, first candidate ---------------------------
+    - level: 1
+      provider: TODO          # openai | anthropic
+      model: TODO             # exact model id as the provider reports it
+      params:
+        temperature: 0.2
+        max_tokens: 1024
+        timeout_ms: 30000
+      pricing:
+        # USD per 1,000,000 tokens — TODO: use the provider's current price list.
+        input_per_mtok_usd: TODO
+        output_per_mtok_usd: TODO
+      # Candidate is approved at or above this score.
+      jev_threshold: 0.80
+
+    # ---- Level 2: mid-tier model, second candidate --------------------------
+    - level: 2
+      provider: TODO
+      model: TODO
+      params:
+        temperature: 0.2
+        max_tokens: 2048
+        timeout_ms: 45000
+      pricing:
+        input_per_mtok_usd: TODO
+        output_per_mtok_usd: TODO
+      jev_threshold: 0.70
+
+    # ---- Level 3: final model, returned WITHOUT evaluation ------------------
+    - level: 3
+      provider: TODO
+      model: TODO
+      params:
+        temperature: 0.2
+        max_tokens: 4096
+        timeout_ms: 90000
+      pricing:
+        input_per_mtok_usd: TODO
+        output_per_mtok_usd: TODO
+      # No jev_threshold here: defining one is a configuration error.
+
+jev:
+  timeout_ms: 1500
+  # What to do when JEV cannot produce a score (timeout, 5xx, bad score, unset
+  # endpoint). The score recorded in telemetry is always null in that case.
+  #   fail_open  : answer with the candidate as if approved (availability first)
+  #   escalate   : treat the candidate as unapproved and try the next level
+  #   fail_closed: return HTTP 503 and never deliver an unevaluated answer
+  # Can be overridden with JEV_FAILURE_POLICY.
+  failure_policy: escalate
+
+  # How the proxy talks to JEV. Both dialects return a number in [0, 1] or nothing;
+  # the threshold and the failure policy are identical for both.
+  #   simple             : POST {"prompt","response"} to JEV_API_URL (legacy contract)
+  #   typesafe_decisions : the official System One API, through the `typesafe_sdk`
+  #                        package. Sends the client's system prompt and the
+  #                        candidate as a typed `state`, so an answer that ignores
+  #                        the instructions can be rejected. Point JEV_API_URL at
+  #                        https://openrouter.ai/api to reach JEV via OpenRouter.
+  # Can be overridden with JEV_DIALECT.
+  dialect: simple
+
+  # Required when dialect is `typesafe_decisions` (for example jev-1.13);
+  # ignored by `simple`. Can be overridden with JEV_MODEL.
+  model: ""
+
+  # The questions asked by the `typesafe_decisions` dialect. Each one is a
+  # requirement, not a vote: the candidate's score is the minimum answer, so one
+  # low `noul` rejects it however confident the other answers are.
+  questions:
+    correct: >-
+      Is the answer correct and complete for the question that was asked, and
+      does it follow every instruction in the system prompt?

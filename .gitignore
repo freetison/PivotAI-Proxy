@@ -1,0 +1,157 @@
+# ============================================================
+# AI Cascade Proxy — .gitignore
+# ============================================================
+
+# ---------- Secrets & local configuration ----------
+.env
+.env.*
+!.env.example
+*.env
+secrets.json
+secrets.yaml
+secrets.yml
+*.pem
+*.key
+*.p12
+*.pfx
+credentials*.json
+service-account*.json
+config.local.*
+*.local.toml
+*.local.yaml
+*.local.yml
+
+# ---------- Python: bytecode & interpreter artifacts ----------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.pyd
+*.pyo
+# PEP 582 local packages
+__pypackages__/
+
+# ---------- Python: build & distribution ----------
+build/
+dist/
+sdist/
+wheels/
+*.egg-info/
+*.egg
+.eggs/
+MANIFEST
+pip-wheel-metadata/
+share/python-wheels/
+*.whl
+
+# ---------- Python: packaging / tooling caches ----------
+.venv/
+venv/
+ENV/
+env/
+.python-version
+.tox/
+.nox/
+.hypothesis/
+.pytest_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.ruff_cache/
+.pytype/
+.pyre/
+cython_debug/
+
+# ---------- Test & coverage artifacts ----------
+.coverage
+.coverage.*
+coverage.xml
+coverage.json
+*.lcov
+htmlcov/
+nosetests.xml
+junit*.xml
+test-results/
+reports/
+.benchmarks/
+
+# ---------- Logs & runtime output ----------
+*.log
+*.log.*
+logs/
+log/
+*.jsonl
+*.out
+*.err
+tmp/
+temp/
+.tmp/
+*.pid
+*.seed
+
+# --- Committed examples (keep these even though *.jsonl above is ignored) ---
+!eval/datasets/*.jsonl
+
+# ---------- Local data / state / databases ----------
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
+data/
+# Calibration datasets you label yourself stay local (synthetic_example.jsonl is
+# re-included above); they often quote production prompts.
+eval/datasets/*.local.jsonl
+*.parquet
+*.feather
+
+# ---------- AI / codebase index caches ----------
+.codebase-index/
+.cache/
+.caches/
+*.cache
+
+# ---------- Editor & IDE ----------
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json.example
+*.code-workspace
+*.swp
+*.swo
+*.swn
+*~
+.\#*
+\#*\#
+.history/
+*.orig
+*.rej
+
+# ---------- OS metadata ----------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ---------- Jupyter ----------
+.ipynb_checkpoints/
+
+# ---------- Local tooling state (agent/task runners) ----------
+.kilo/
+.kilocode/
+
+# ---------- Archives / binaries that should not be committed ----------
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+*.rar

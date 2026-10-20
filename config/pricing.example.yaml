@@ -1,0 +1,35 @@
+# ============================================================================
+# AI Cascade Proxy — optional price table (example / TEMPLATE)
+# ============================================================================
+# OPTIONAL. `cascade.yaml` already prices every level, and that is the default.
+# Use this file only if the people who own the budget should edit prices without
+# touching the cascade definition.
+#
+# 1. Copy it to `config/pricing.yaml`
+# 2. Replace every TODO with the price you were billed (per MILLION tokens)
+# 3. Set PRICING_PATH if you keep it somewhere else
+#
+# Rules enforced at startup:
+#   - Every configured level must appear here, keyed exactly `provider/model`
+#     as written in cascade.yaml. A partial table is refused: mixing YAML prices
+#     with this file makes the cost figure unauditable.
+#   - A leftover TODO is refused. Prices are never guessed.
+#   - Keys naming a model no level uses are refused (usually a typo).
+#
+# When PRICING_PATH is unset, cascade.yaml's prices are used and this file is ignored.
+# ============================================================================
+
+# ---- Level 1 -----------------------------------------------------------------
+"TODO-provider/TODO-model-one":
+  input_per_mtok_usd: TODO
+  output_per_mtok_usd: TODO
+
+# ---- Level 2 -----------------------------------------------------------------
+"TODO-provider/TODO-model-two":
+  input_per_mtok_usd: TODO
+  output_per_mtok_usd: TODO
+
+# ---- Level 3 (final / strongest) ---------------------------------------------
+"TODO-provider/TODO-model-three":
+  input_per_mtok_usd: TODO
+  output_per_mtok_usd: TODO
